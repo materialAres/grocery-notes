@@ -3,8 +3,8 @@ package com.example.stickers
 import android.app.Application
 import android.content.Context
 import com.example.stickers.data.AppDatabase
-import com.example.stickers.data.NoOpWidgetUpdater
 import com.example.stickers.data.NoteRepository
+import com.example.stickers.widget.GlanceWidgetUpdater
 
 class App : Application() {
     lateinit var container: AppContainer
@@ -20,8 +20,7 @@ class App : Application() {
 class AppContainer(context: Context) {
     val database: AppDatabase by lazy { AppDatabase.build(context) }
 
-    // TODO(milestone 2): replace NoOpWidgetUpdater with the Glance-backed updater.
-    val repository: NoteRepository by lazy { NoteRepository(database, NoOpWidgetUpdater) }
+    val repository: NoteRepository by lazy { NoteRepository(database, GlanceWidgetUpdater(context)) }
 }
 
 val Context.appContainer: AppContainer

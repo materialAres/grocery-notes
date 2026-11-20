@@ -36,6 +36,10 @@ interface NoteDao {
     @Query("SELECT * FROM notes WHERE appWidgetId = :appWidgetId")
     suspend fun getNoteWithBlocksByWidget(appWidgetId: Int): NoteWithBlocks?
 
+    @Transaction
+    @Query("SELECT * FROM notes WHERE appWidgetId = :appWidgetId")
+    fun observeNoteWithBlocksByWidget(appWidgetId: Int): Flow<NoteWithBlocks?>
+
     @Query("UPDATE notes SET updatedAt = :now WHERE id = :id")
     suspend fun touch(id: Long, now: Long)
 

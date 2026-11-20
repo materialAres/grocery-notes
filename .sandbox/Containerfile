@@ -1,0 +1,25 @@
+FROM docker.io/library/node:22-trixie-slim
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+      git openssh-client ca-certificates curl ripgrep openjdk-21-jdk-headless unzip \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN npm install -g @anthropic-ai/claude-code
+
+# Android SDK (di proprietà di "node", così Gradle può scaricare componenti mancanti)
+ENV ANDROID_HOME=/opt/android-sdk
+ENV ANDROID_SDK_ROOT=/opt/android-sdk
+RUN mkdir -p $ANDROID_HOME/cmdline-tools \
+    && curl -fsSL -o /tmp/cmdtools.zip https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip \
+    && unzip -q /tmp/cmdtools.zip -d $ANDROID_HOME/cmdline-tools \
+    && mv $ANDROID_HOME/cmdline-tools/cmdline-tools $ANDROID_HOME/cmdline-tools/latest \
+    && rm /tmp/cmdtools.zip \
+    && yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses >/dev/null \
+    && $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "platform-tools" "platforms;android-37.0" "build-tools;37.0.0" "build-tools;36.0.0" \
+    && chown -R node:node $ANDROID_HOME
+
+# l'utente "node" ha uid 1000, come l'utente host: con --userns=keep-id i file restano tuoi
+USER node
+ENV HOME=/home/node
+WORKDIR /work
+CMD ["claude"]

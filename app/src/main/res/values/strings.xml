@@ -2,4 +2,5 @@
 <resources>
     <!-- TODO: final app name is TBD -->
     <string name="app_name">Sticky Notes</string>
+    <string name="widget_description">A sticky note with text and checklists</string>
 </resources>

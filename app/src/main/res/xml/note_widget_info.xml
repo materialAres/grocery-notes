@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Sizes (DESIGN.md §6): 3x3 by default, resizable from 3 cols x 3 rows up to 5 cols x 4 rows.
+  Launchers round a dp size UP to whole cells, so each value sits between N-1 and N cells
+  for typical cell sizes (cols ~73-93dp wide, rows ~90-118dp tall):
+    width:  203dp → 3 cols, 349dp → 5 cols (4 on launchers with a 4-column grid)
+    height: 250dp → 3 rows, 400dp → 4 rows
+  Calibrated on the Pixel launcher (Android 17 emulator, 4x5 grid, rows ≈104dp).
+-->
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    android:description="@string/widget_description"
+    android:initialLayout="@layout/glance_default_loading_layout"
+    android:minWidth="203dp"
+    android:minHeight="250dp"
+    android:minResizeWidth="203dp"
+    android:minResizeHeight="250dp"
+    android:maxResizeWidth="349dp"
+    android:maxResizeHeight="400dp"
+    android:targetCellWidth="3"
+    android:targetCellHeight="3"
+    android:resizeMode="horizontal|vertical"
+    android:updatePeriodMillis="0"
+    android:widgetCategory="home_screen" />

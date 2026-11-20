@@ -24,6 +24,9 @@ class NoteRepository(
     suspend fun getNoteForWidget(appWidgetId: Int): NoteWithBlocks? =
         dao.getNoteWithBlocksByWidget(appWidgetId)
 
+    fun observeNoteForWidget(appWidgetId: Int): Flow<NoteWithBlocks?> =
+        dao.observeNoteWithBlocksByWidget(appWidgetId)
+
     fun observeBin(): Flow<List<NoteWithBlocks>> = dao.observeBin()
 
     fun observeBinCount(): Flow<Int> = dao.observeBinCount()
