@@ -106,6 +106,23 @@ class NoteRepositoryTest {
     }
 
     @Test
+    fun deleteBlock_twice_isNoOp() = runTest {
+        // Fast double tap on a widget checkbox: the second callback finds nothing to delete.
+        val id = repo.createNoteForWidget(7)
+        val milk = repo.addBlock(id, BlockType.CHECK, "milk")
+        repo.addBlock(id, BlockType.CHECK, "eggs")
+        repo.deleteBlock(milk)
+        updatedWidgets.clear()
+        now += 10
+
+        repo.deleteBlock(milk)
+
+        assertEquals(listOf("eggs"), texts(id))
+        assertTrue(updatedWidgets.isEmpty())
+        assertTrue(repo.getNote(id)!!.note.updatedAt < now)
+    }
+
+    @Test
     fun editorCheck_hidesFromWidget_untilPurged() = runTest {
         val id = repo.createNoteForWidget(1)
         val milk = repo.addBlock(id, BlockType.CHECK, "milk")

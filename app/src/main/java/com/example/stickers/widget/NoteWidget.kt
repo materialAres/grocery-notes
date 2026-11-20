@@ -107,9 +107,9 @@ private fun BlockRow(block: Block, style: TextStyle) {
     when (block.type) {
         BlockType.TEXT -> Text(text = block.text, style = style, modifier = rowModifier)
         BlockType.CHECK -> CheckBox(
+            // Always drawn unticked: a tick deletes the item, so it never shows as checked.
             checked = false,
-            // TODO(milestone 3): tick → delete the item permanently.
-            onCheckedChange = null,
+            onCheckedChange = CheckItemAction.forBlock(block.id),
             text = block.text,
             style = style,
             colors = CheckboxDefaults.colors(

@@ -2,7 +2,7 @@ package com.example.stickers.data
 
 /**
  * Asks the home-screen widget showing a note to redraw itself.
- * The real Glance-backed implementation arrives with milestone 2.
+ * The app uses the Glance-backed `GlanceWidgetUpdater`; tests pass a fake.
  */
 fun interface WidgetUpdater {
     suspend fun update(appWidgetId: Int)
