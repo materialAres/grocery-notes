@@ -40,6 +40,11 @@ dependencies {
     ksp(libs.androidx.room.compiler)
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.androidx.glance.appwidget)
+    implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.compose.material3)
+    implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+    implementation(libs.reorderable) // drag-to-reorder in LazyColumn
 
     testImplementation(libs.junit)
 

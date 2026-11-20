@@ -6,8 +6,13 @@
     width:  203dp → 3 cols, 349dp → 5 cols (4 on launchers with a 4-column grid)
     height: 250dp → 3 rows, 400dp → 4 rows
   Calibrated on the Pixel launcher (Android 17 emulator, 4x5 grid, rows ≈104dp).
+
+  configure: setup screen shown on placement (New note). It must be a full class name.
+  widgetFeatures="reconfigurable" (DESIGN.md §6) is left for milestone 5, when setup can
+  also restore a deleted note.
 -->
 <appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    android:configure="com.example.stickers.ui.setup.WidgetSetupActivity"
     android:description="@string/widget_description"
     android:initialLayout="@layout/glance_default_loading_layout"
     android:minWidth="203dp"

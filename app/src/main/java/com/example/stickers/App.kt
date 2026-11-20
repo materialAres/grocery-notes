@@ -4,7 +4,11 @@ import android.app.Application
 import android.content.Context
 import com.example.stickers.data.AppDatabase
 import com.example.stickers.data.NoteRepository
+import com.example.stickers.data.WriteQueue
 import com.example.stickers.widget.GlanceWidgetUpdater
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 
 class App : Application() {
     lateinit var container: AppContainer
@@ -18,9 +22,15 @@ class App : Application() {
 
 /** Manual dependency container (DESIGN.md §2). */
 class AppContainer(context: Context) {
+    /** Lives as long as the process: work that must finish after a screen closes. */
+    val appScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
+
     val database: AppDatabase by lazy { AppDatabase.build(context) }
 
     val repository: NoteRepository by lazy { NoteRepository(database, GlanceWidgetUpdater(context)) }
+
+    /** Ordered queue for the editor's writes, shared so a reopened editor waits for the previous one. */
+    val editorWrites: WriteQueue by lazy { WriteQueue(appScope) }
 }
 
 val Context.appContainer: AppContainer

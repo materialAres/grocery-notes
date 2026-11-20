@@ -6,7 +6,8 @@
         android:name=".App"
         android:allowBackup="false"
         android:label="@string/app_name"
-        android:supportsRtl="true">
+        android:supportsRtl="true"
+        android:theme="@style/Theme.Stickers">
 
         <receiver
             android:name=".widget.NoteWidgetReceiver"
@@ -19,6 +20,22 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/note_widget_info" />
         </receiver>
+
+        <!-- Launched by the home screen when a widget is placed (widget "configure" activity). -->
+        <activity
+            android:name=".ui.setup.WidgetSetupActivity"
+            android:exported="true"
+            android:excludeFromRecents="true"
+            android:taskAffinity="">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".ui.editor.EditorActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
 
     </application>
 
