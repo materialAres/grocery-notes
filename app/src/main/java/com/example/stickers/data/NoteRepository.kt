@@ -35,26 +35,44 @@ class NoteRepository(
 
     // ---------------------------------------------------------------- Note lifecycle
 
-    /** A new widget was placed and the user picked "New note". Returns the note id. */
-    suspend fun createNoteForWidget(appWidgetId: Int): Long {
+    /**
+     * The user picked "New note" for a widget. Returns the note id.
+     *
+     * If the widget already shows a note, that note's id is returned and nothing is created
+     * (the pin callback and the setup screen may both try to bind the same widget), unless
+     * [replaceCurrent] is set: then the current note goes to the bin first (reconfigure).
+     */
+    suspend fun createNoteForWidget(appWidgetId: Int, replaceCurrent: Boolean = false): Long {
         val now = clock()
-        val id = dao.insertNote(Note(appWidgetId = appWidgetId, createdAt = now, updatedAt = now))
+        val id = db.withTransaction {
+            if (replaceCurrent) unbindWidget(appWidgetId, now)
+            dao.getNoteByWidget(appWidgetId)?.id
+                ?: dao.insertNote(Note(appWidgetId = appWidgetId, createdAt = now, updatedAt = now))
+        }
         widgetUpdater.update(appWidgetId)
         return id
     }
 
     /**
-     * Binds a note from the bin to a (new) widget. Returns false if the note is not in
-     * the bin or the widget already shows another note.
+     * Binds a note from the bin to a widget. Returns false if the note is not in the bin,
+     * or if the widget already shows another note and [replaceCurrent] is not set.
+     * With [replaceCurrent], the widget's current note goes to the bin first (reconfigure).
      */
-    suspend fun restoreToWidget(noteId: Long, appWidgetId: Int): Boolean {
+    suspend fun restoreToWidget(noteId: Long, appWidgetId: Int, replaceCurrent: Boolean = false): Boolean {
+        val now = clock()
         val restored = db.withTransaction {
             val note = dao.getNote(noteId)
-            if (note == null || !note.isInBin || dao.getNoteByWidget(appWidgetId) != null) {
-                false
-            } else {
-                dao.updateNote(note.copy(appWidgetId = appWidgetId, deletedAt = null, updatedAt = clock()))
-                true
+            when {
+                note == null || !note.isInBin -> false
+                else -> {
+                    if (replaceCurrent) unbindWidget(appWidgetId, now)
+                    if (dao.getNoteByWidget(appWidgetId) != null) {
+                        false
+                    } else {
+                        dao.updateNote(note.copy(appWidgetId = appWidgetId, deletedAt = null, updatedAt = now))
+                        true
+                    }
+                }
             }
         }
         if (restored) widgetUpdater.update(appWidgetId)
@@ -68,16 +86,19 @@ class NoteRepository(
     suspend fun onWidgetsRemoved(appWidgetIds: IntArray) {
         val now = clock()
         db.withTransaction {
-            for (widgetId in appWidgetIds) {
-                val note = dao.getNoteByWidget(widgetId) ?: continue
-                dao.deleteCheckedBlocks(note.id)
-                val withBlocks = dao.getNoteWithBlocks(note.id) ?: continue
-                if (withBlocks.isEmpty) {
-                    dao.deleteNote(note.id)
-                } else {
-                    dao.updateNote(note.copy(appWidgetId = null, deletedAt = now, updatedAt = now))
-                }
-            }
+            for (widgetId in appWidgetIds) unbindWidget(widgetId, now)
+        }
+    }
+
+    /** Detaches the widget's note (if any): to the bin, or deleted if empty. Call in a transaction. */
+    private suspend fun unbindWidget(widgetId: Int, now: Long) {
+        val note = dao.getNoteByWidget(widgetId) ?: return
+        dao.deleteCheckedBlocks(note.id)
+        val withBlocks = dao.getNoteWithBlocks(note.id) ?: return
+        if (withBlocks.isEmpty) {
+            dao.deleteNote(note.id)
+        } else {
+            dao.updateNote(note.copy(appWidgetId = null, deletedAt = now, updatedAt = now))
         }
     }
 

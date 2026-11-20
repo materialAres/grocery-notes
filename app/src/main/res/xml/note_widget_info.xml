@@ -7,9 +7,9 @@
     height: 250dp → 3 rows, 400dp → 4 rows
   Calibrated on the Pixel launcher (Android 17 emulator, 4x5 grid, rows ≈104dp).
 
-  configure: setup screen shown on placement (New note). It must be a full class name.
-  widgetFeatures="reconfigurable" (DESIGN.md §6) is left for milestone 5, when setup can
-  also restore a deleted note.
+  configure: setup screen shown on placement (New note / Restore deleted). Full class name.
+  reconfigurable: the same screen can be reopened from the widget's long-press menu to put
+  a different note on it (launcher-dependent).
 -->
 <appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
     android:configure="com.example.stickers.ui.setup.WidgetSetupActivity"
@@ -25,4 +25,5 @@
     android:targetCellHeight="3"
     android:resizeMode="horizontal|vertical"
     android:updatePeriodMillis="0"
+    android:widgetFeatures="reconfigurable"
     android:widgetCategory="home_screen" />

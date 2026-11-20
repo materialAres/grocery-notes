@@ -6,6 +6,9 @@ import com.example.stickers.data.AppDatabase
 import com.example.stickers.data.NoteRepository
 import com.example.stickers.data.WriteQueue
 import com.example.stickers.widget.GlanceWidgetUpdater
+import com.example.stickers.widget.PendingPin
+import com.example.stickers.widget.WidgetPinner
+import com.example.stickers.work.BinPurgeWorker
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -17,6 +20,7 @@ class App : Application() {
     override fun onCreate() {
         super.onCreate()
         container = AppContainer(this)
+        BinPurgeWorker.schedule(this)
     }
 }
 
@@ -31,6 +35,10 @@ class AppContainer(context: Context) {
 
     /** Ordered queue for the editor's writes, shared so a reopened editor waits for the previous one. */
     val editorWrites: WriteQueue by lazy { WriteQueue(appScope) }
+
+    val pendingPin: PendingPin by lazy { PendingPin(context) }
+
+    val widgetPinner: WidgetPinner by lazy { WidgetPinner(context, pendingPin) }
 }
 
 val Context.appContainer: AppContainer

@@ -44,7 +44,9 @@ dependencies {
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
+    implementation(libs.androidx.lifecycle.runtime.compose)
     implementation(libs.reorderable) // drag-to-reorder in LazyColumn
+    implementation(libs.androidx.work.runtime)
 
     testImplementation(libs.junit)
 

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Launcher icon: a yellow sticky note with a folded corner and three lines of text.
+     Drawn inside the 66dp safe zone of the 108dp adaptive-icon canvas. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <path
+        android:fillColor="#FFF59D"
+        android:pathData="M31,31H77V63L63,77H31Z" />
+    <path
+        android:fillColor="#D9CC6A"
+        android:pathData="M77,63H63V77Z" />
+    <path
+        android:fillColor="#7A7146"
+        android:pathData="M39,42h30v4h-30z M39,51h30v4h-30z M39,60h17v4h-17z" />
+</vector>

@@ -4,11 +4,39 @@
     <string name="app_name">Sticky Notes</string>
     <string name="widget_description">A sticky note with text and checklists</string>
 
+    <string name="cancel">Cancel</string>
+    <string name="ok">OK</string>
+    <string name="untitled">Untitled</string>
+
     <!-- Widget setup -->
     <string name="setup_title">New sticky note</string>
     <string name="setup_body">Start a blank note on this widget.</string>
+    <string name="setup_replace_title">Change this note</string>
+    <string name="setup_replace_body">The note on this widget now will move to Recently deleted.</string>
     <string name="setup_new_note">New note</string>
-    <string name="cancel">Cancel</string>
+    <string name="setup_restore_header">Or restore a deleted note</string>
+
+    <!-- Launcher -->
+    <string name="home_howto_title">Your notes live on the home screen</string>
+    <string name="home_howto_body">Long-press an empty spot on your home screen, tap Widgets, find %1$s and drag it into place. Each widget is one note.\n\nTo delete a note, remove its widget. It stays in Recently deleted for 7 days.</string>
+    <string name="home_add_note">Add note to home screen</string>
+    <string name="home_recently_deleted">Recently deleted</string>
+    <string name="pin_unsupported_title">Add the widget by hand</string>
+    <string name="pin_unsupported_body">Your home screen can\'t add widgets from apps. Long-press the home screen, tap Widgets and add %1$s. To bring back a deleted note, choose Restore deleted on the setup screen.</string>
+
+    <!-- Recently deleted -->
+    <string name="bin_empty">Nothing here. Notes you remove from the home screen stay here for 7 days.</string>
+    <string name="bin_restore">Restore</string>
+    <string name="bin_delete_forever">Delete forever</string>
+    <string name="bin_empty_bin">Empty bin</string>
+    <string name="bin_empty_bin_confirm">Delete all notes in Recently deleted? This can\'t be undone.</string>
+    <string name="bin_delete_forever_confirm">Delete “%1$s” forever? This can\'t be undone.</string>
+    <string name="bin_deletes_today">Deletes today</string>
+    <plurals name="bin_deletes_in_days">
+        <item quantity="one">Deletes in %d day</item>
+        <item quantity="other">Deletes in %d days</item>
+    </plurals>
+    <string name="back">Back</string>
 
     <!-- Editor -->
     <string name="editor_done">Done</string>

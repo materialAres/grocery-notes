@@ -51,6 +51,28 @@ class NoteRepositoryTest {
     }
 
     @Test
+    fun createNoteForWidget_twice_returnsSameNote() = runTest {
+        // Pin callback and setup screen both binding the same new widget.
+        val first = repo.createNoteForWidget(42)
+        val second = repo.createNoteForWidget(42)
+
+        assertEquals(first, second)
+        assertEquals(first, repo.getNoteForWidget(42)!!.note.id)
+    }
+
+    @Test
+    fun createNoteForWidget_replacingCurrent_sendsOldNoteToBin() = runTest {
+        val old = repo.createNoteForWidget(42)
+        repo.updateTitle(old, "Old")
+
+        val new = repo.createNoteForWidget(42, replaceCurrent = true)
+
+        assertTrue(new != old)
+        assertEquals(new, repo.getNoteForWidget(42)!!.note.id)
+        assertTrue(repo.getNote(old)!!.note.isInBin)
+    }
+
+    @Test
     fun noteProperties_areUpdated_andWidgetRefreshed() = runTest {
         val id = repo.createNoteForWidget(1)
         updatedWidgets.clear()
@@ -258,6 +280,27 @@ class NoteRepositoryTest {
         repo.onWidgetsRemoved(intArrayOf(3))
         assertFalse(repo.restoreToWidget(binned, appWidgetId = 1)) // widget 1 already shows a note
         assertTrue(repo.getNote(binned)!!.note.isInBin)
+    }
+
+    @Test
+    fun restoreToWidget_replacingCurrent_swapsNotes() = runTest {
+        val binned = repo.createNoteForWidget(3).also { repo.updateTitle(it, "binned") }
+        repo.onWidgetsRemoved(intArrayOf(3))
+        val current = repo.createNoteForWidget(1).also { repo.updateTitle(it, "current") }
+
+        assertTrue(repo.restoreToWidget(binned, appWidgetId = 1, replaceCurrent = true))
+
+        assertEquals(binned, repo.getNoteForWidget(1)!!.note.id)
+        assertTrue(repo.getNote(current)!!.note.isInBin)
+    }
+
+    @Test
+    fun restoreToWidget_replacingCurrent_keepsCurrent_whenNoteNotInBin() = runTest {
+        val current = repo.createNoteForWidget(1).also { repo.updateTitle(it, "current") }
+
+        assertFalse(repo.restoreToWidget(noteId = 999, appWidgetId = 1, replaceCurrent = true))
+
+        assertEquals(current, repo.getNoteForWidget(1)!!.note.id)
     }
 
     // ------------------------------------------------------------ bin maintenance

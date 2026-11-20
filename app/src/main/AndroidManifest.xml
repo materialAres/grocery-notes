@@ -5,9 +5,19 @@
     <application
         android:name=".App"
         android:allowBackup="false"
+        android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/Theme.Stickers">
+
+        <activity
+            android:name=".ui.launcher.LauncherActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
 
         <receiver
             android:name=".widget.NoteWidgetReceiver"
@@ -20,6 +30,11 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/note_widget_info" />
         </receiver>
+
+        <!-- Result of "Add to home screen" requests made by the app (WidgetPinner). -->
+        <receiver
+            android:name=".widget.PinWidgetCallbackReceiver"
+            android:exported="false" />
 
         <!-- Launched by the home screen when a widget is placed (widget "configure" activity). -->
         <activity
